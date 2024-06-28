@@ -6,10 +6,10 @@
 		<title>Time</title>
 	</head>
 	<body>
-		<main class="w-screen h-screen flex flex-col justify-center items-center">
+		<main class="w-screen h-screen flex justify-center items-center">
 			<section>
-				<p id="timezone" class="text-3xl text-end">User's Timezone</p>
-				<section class="text-9xl">
+				<p id="timezone" class="text-2xl sm:text-3xl text-end text-gray-500">User's Timezone</p>
+				<section class="text-6xl sm:text-9xl my-1 flex gap-2">
 					<span id="hour">00</span>
 					<span>:</span>
 					<span id="minute">00</span>
@@ -44,21 +44,33 @@ function time() {
 			formatStr(newDate.getMinutes()),
 			formatStr(newDate.getSeconds())
 		]
+		const newWeekDay = Intl.DateTimeFormat(dateOptions.locale, { weekday: "long" }).format(newDate)
+		const newFullDate = `${newWeekDay}, ${newDate.toLocaleDateString()}`
 
 		if ($hour.innerText !== hour) $hour.innerText = hour
 		if ($minute.innerText !== minute) $minute.innerText = minute
+		if ($date.innerText !== newFullDate) $date.innerText = newFullDate
+
 		$second.innerText = second
 
+		document.title = `Time: ${hour}:${minute}:${second}`
 	}, 1000)
 }
 
 document.addEventListener("DOMContentLoaded", () => {
 	$timezone.innerText = dateOptions.timeZone
 	$date.innerText = `${weekDay}, ${date.toLocaleDateString()}`
+	const [hour, minute, second] = [
+		formatStr(date.getHours()),
+		formatStr(date.getMinutes()),
+		formatStr(date.getSeconds())
+	]
 
-	$hour.innerText = formatStr(date.getHours())
-	$minute.innerText = formatStr(date.getMinutes())
-	$second.innerText = formatStr(date.getSeconds())
+	$hour.innerText = hour
+	$minute.innerText = minute
+	$second.innerText = second
+
+	document.title = `Time: ${hour}:${minute}:${second}`
 
 	time()
 })
