@@ -1,0 +1,65 @@
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<title>Time</title>
+	</head>
+	<body>
+		<main class="w-screen h-screen flex flex-col justify-center items-center">
+			<section>
+				<p id="timezone" class="text-3xl text-end">User's Timezone</p>
+				<section class="text-9xl">
+					<span id="hour">00</span>
+					<span>:</span>
+					<span id="minute">00</span>
+					<span>:</span>
+					<span id="second">00</span>
+				</section>
+				<p id="date" class="text-3xl text-end">User's Date</p>
+			</section>
+		</main>
+	</body>
+</html>
+
+<script>
+
+const $timezone = document.getElementById("timezone") as HTMLParagraphElement
+const $date = document.getElementById("date") as HTMLParagraphElement
+const $hour = document.getElementById("hour") as HTMLSpanElement
+const $minute = document.getElementById("minute") as HTMLSpanElement
+const $second = document.getElementById("second") as HTMLSpanElement
+
+const date = new Date()
+const dateOptions = Intl.DateTimeFormat().resolvedOptions()
+const weekDay = Intl.DateTimeFormat(dateOptions.locale, { weekday: "long" }).format(date)
+
+const formatStr = (s: number) => s.toString().padStart(2, "0")
+
+function time() {
+	setInterval(() => {
+		const newDate = new Date()
+		const [hour, minute, second] = [
+			formatStr(newDate.getHours()),
+			formatStr(newDate.getMinutes()),
+			formatStr(newDate.getSeconds())
+		]
+
+		if ($hour.innerText !== hour) $hour.innerText = hour
+		if ($minute.innerText !== minute) $minute.innerText = minute
+		$second.innerText = second
+
+	}, 1000)
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+	$timezone.innerText = dateOptions.timeZone
+	$date.innerText = `${weekDay}, ${date.toLocaleDateString()}`
+
+	$hour.innerText = formatStr(date.getHours())
+	$minute.innerText = formatStr(date.getMinutes())
+	$second.innerText = formatStr(date.getSeconds())
+
+	time()
+})
+</script>
